@@ -3,14 +3,30 @@ import './App.css';
 // import { json } from './testDB.js'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Container } from '@material-ui/core';
+import { Container, Avatar } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import CryptoItem from './CryptoItem';
+import { makeStyles } from '@material-ui/core/styles';
 
 function App() {
 
+  const useStyles = makeStyles((theme) => ({
+    mainInput: {
+      width: '40ch',
+    },
+    submitButton: {
+      size: 'small',
+      marginLeft: '10px',
+    },
+    samjavatar: {
+      marginTop: '10px',
+      width: theme.spacing(30),
+      height: theme.spacing(30),
+      align: 'center'
+    }
+  }));
+
   const [address, setAddress] = useState('');
-  // const [eth, setEth] = useState({});
   const [tokens, setTokens] = useState([]);
 
   async function fetchData() {
@@ -19,8 +35,6 @@ function App() {
         const response = await fetch(url)
         const json = await response.json()
         const {ETH, tokens} = json
-
-        // setEth({id: ETH, name: 'ETH', balance: ETH.balance})
         
         const tokenList = []
         tokenList.push({id: ETH, name: 'ETH', balance: ETH.balance})
@@ -44,28 +58,25 @@ function App() {
     event.preventDefault()
   }
 
+  const classes = useStyles();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <Container maxWdith='sm'>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <form onSubmit={handleSubmit}>
-              <TextField id="outlined-basic" label="address" variant="outlined" onChange={handleChange} /><br></br>
-              <Button variant="outlined" type='submit'>Submit</Button><br></br>
-            </form>
-          </Grid>
-            <div>
-              <Grid container spacing={4} justify='center'>
-                  {tokens.map((token, index) => {
+        <Container align='center'>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Avatar alt="Remy Sharp" className={classes.samjavatar} src='https://consequence.net/wp-content/uploads/2017/03/samuel-jackson-headshot_crop.jpg'/>
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField id="standard" size='small' className={classes.mainInput} label="address" 
+                      variant="outlined" onChange={handleChange}/>
+                    <Button variant="outlined" size='large' className={classes.submitButton} onClick={handleSubmit}>Submit</Button>
+                </Grid>
+                {tokens.map((token, index) => {
                     return <CryptoItem key={index} token={token}/>
-                  })}
-              </Grid>
-            </div>
-
-        </Grid>
+                })}
+            </Grid>
         </Container>
-      </header>
     </div>
   );
 }
