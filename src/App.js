@@ -3,23 +3,15 @@ import './App.css';
 // import { json } from './testDB.js'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { DataGrid } from '@material-ui/data-grid';
+import { Container } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import CryptoItem from './CryptoItem';
 
 function App() {
 
   const [address, setAddress] = useState('');
-  const [eth, setEth] = useState({});
+  // const [eth, setEth] = useState({});
   const [tokens, setTokens] = useState([]);
-
-  // useEffect(() => {
-  //   fetchData()
-  // })
-  
-  const columns = [
-    // { field: 'id', headerName: 'Column 1', width: 200 },
-    { field: 'name', headerName: 'Token Name', width: 200 },
-    { field: 'balance', headerName: 'Token Balance', width: 200 },
-  ];
 
   async function fetchData() {
       try {
@@ -28,9 +20,10 @@ function App() {
         const json = await response.json()
         const {ETH, tokens} = json
 
-        setEth({name: 'ETH', balance: ETH.balance})
+        // setEth({id: ETH, name: 'ETH', balance: ETH.balance})
         
         const tokenList = []
+        tokenList.push({id: ETH, name: 'ETH', balance: ETH.balance})
         tokens.forEach((token) => {
           const { tokenInfo, balance} = token
           const { name } = tokenInfo
@@ -54,18 +47,24 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <form onSubmit={handleSubmit}>
-          <TextField id="outlined-basic" label="address" variant="outlined" onChange={handleChange} />
-          <Button variant="outlined" type='submit'>Submit</Button>
-        </form>
-        <p>{eth.name} {address} {eth.balance}</p>
-        <p>List of Tokens:</p>
-        {/* {
-          tokens.map((token, index) => {
-              return <p key={index}>{token.name} {token.balance.toFixed(2)}</p>
-          })
-        } */}
-        <DataGrid rows={tokens} columns={columns} autoHeight={true}/>
+        <Container maxWdith='sm'>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <form onSubmit={handleSubmit}>
+              <TextField id="outlined-basic" label="address" variant="outlined" onChange={handleChange} /><br></br>
+              <Button variant="outlined" type='submit'>Submit</Button><br></br>
+            </form>
+          </Grid>
+            <div>
+              <Grid container spacing={4} justify='center'>
+                  {tokens.map((token, index) => {
+                    return <CryptoItem key={index} token={token}/>
+                  })}
+              </Grid>
+            </div>
+
+        </Grid>
+        </Container>
       </header>
     </div>
   );
