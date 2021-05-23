@@ -1,12 +1,13 @@
 import React, { useState, /*useEffect*/ } from 'react';
-import './App.css';
+import './styles/App.css';
 // import { json } from './testDB.js'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { Container, Avatar, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import CryptoItem from './CryptoItem';
+import CryptoItem from './components/CryptoItem';
 import { makeStyles } from '@material-ui/core/styles';
+// import {ethers} from 'ethers';
 
 function App() {
 
@@ -33,6 +34,8 @@ function App() {
   const [tokens, setTokens] = useState([]);
 
   async function fetchData() {
+    // 0xDAcc6f3f681C59547593FdF3c64edF600065F132
+    // https://api.ethplorer.io/getAddressInfo/0xDAcc6f3f681C59547593FdF3c64edF600065F132?apiKey=freekey
       try {
         const url = `https://api.ethplorer.io/getAddressInfo/${address}?apiKey=freekey`
         const response = await fetch(url)
@@ -42,9 +45,14 @@ function App() {
         const tokenList = []
         tokenList.push({id: ETH, name: 'ETH', balance: ETH.balance})
         tokens.forEach((token) => {
-          const { tokenInfo, balance} = token
-          const { name } = tokenInfo
-          tokenList.push({id: name, name: name, balance: balance})
+          const { tokenInfo, balance } = token
+          const { name, symbol, image } = tokenInfo
+
+          const imageurl = (typeof image === 'undefined') ? 'favicon.ico' : `https://ethplorer.io${image}`
+          const cleanToken = {id: name, name: name, balance: balance, image: imageurl, symbol: symbol}
+
+          // const cleanedAddress = ethers.utils.getAddress(address)
+          tokenList.push(cleanToken)
         })
         setTokens(tokenList)
       } catch (error) {
@@ -68,6 +76,7 @@ function App() {
     tokensElements = (
       <Grid xs={8} item>
         <p>Please Search a Valid Eth Address</p>
+        <p>Vitalk Address: 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B</p>
       </Grid>
     )
   } else {
@@ -89,7 +98,9 @@ function App() {
                     <Button variant="outlined" size='large' className={classes.submitButton} onClick={handleSubmit}>Submit</Button>
                 </Grid>
                 <Grid item xs={8}>
-                    <Typography variant='h6' className={classes.tokenListHeader}>Token List:</Typography>
+                    <Typography variant='h6' className={classes.tokenListHeader}>
+                      Token List:
+                    </Typography>
                 </Grid>
                     {tokensElements}
             </Grid>
