@@ -43,7 +43,7 @@ function App() {
         const {ETH, tokens} = json
         
         const tokenList = []
-        tokenList.push({id: ETH, name: 'ETH', balance: ETH.balance})
+        tokenList.push({id: 'Ethereum', name: 'Ethereum', balance: ETH.balance, symbol: 'ETH', image: 'eth.png'})
         tokens.forEach((token) => {
           const { tokenInfo, balance } = token
           const { name, symbol, image } = tokenInfo
