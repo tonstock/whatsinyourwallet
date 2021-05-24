@@ -41,7 +41,6 @@ function App() {
   const handleSubmit = async (event) => {
     if (address.length !== 0) {
       const tokenList = await fetchData(address)
-      console.log(tokenList)
       setTokens(tokenList)
     }
     event.preventDefault()
@@ -50,7 +49,7 @@ function App() {
   const classes = useStyles();
 
   let tokensElements = []
-  if (!tokens.length) {
+  if (!tokens || !tokens.length) {
     tokensElements = (
       <Grid xs={8} item>
         <p>Please Search a Valid Eth Address</p>

@@ -7,34 +7,60 @@ function CryptoItem({token}) {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      // display: 'flex',
-    }
+      display: 'flex',
+    },
+    columnLayout: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexGrow: 1
+    },
+    tokenImage : {
+      display: 'flex',
+      justifyContent: "flex-start",
+    },
+    tokenName : {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: "flex-start",
+    },
+    tokenAmounts : {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: "flex-end",
+      flexGrow: 1
+    }    
   }));
 
   const classes = useStyles();
+  // const classes = {}
   
-  let {name, balance, image, symbol} = token;
+  const {name, balance, image, symbol, rate} = token;
 
   return (
       <Grid xs={8} item>
         <Card className={classes.root}>
-          <CardContent>
-            <Typography gutterBottom variant='h5'>
-              {name}
-            </Typography>
-            <Typography>
-              {symbol}
-            </Typography>
-            <Typography>
-              {balance}
-            </Typography>
-            <Typography>
-              {image}
-            </Typography>
-            <Avatar 
-              alt="Remy Sharp" 
-              src={image}
-            />
+          <CardContent className={classes.columnLayout}>
+            <div className={classes.tokenImage}>
+              <Avatar 
+                  src={image}
+              />
+            </div>
+            <div className={classes.tokenName}>
+              <Typography>
+                {name}
+              </Typography>
+              <Typography>
+                {symbol}
+              </Typography>
+            </div>
+            <div className={classes.tokenAmounts}>
+              <Typography>
+                {balance}
+              </Typography>
+              <Typography>
+                {rate}
+              </Typography>
+            </div>
           </CardContent>
         </Card>
       </Grid>

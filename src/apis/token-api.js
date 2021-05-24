@@ -6,15 +6,32 @@ async function fetchData(address) {
     const {ETH, tokens} = json
     
     const tokenList = []
-    tokenList.push({id: 'Ethereum', name: 'Ethereum', balance: ETH.balance, symbol: 'ETH', image: 'eth.png'})
+    const ethToken = {
+      id: 'Ethereum', 
+      name: 'Ethereum', 
+      balance: ETH.balance, 
+      symbol: 'ETH', 
+      image: 'eth.png', 
+      rate: ETH.price.rate
+    }
+    tokenList.push(ethToken)
+    
     tokens.forEach((token) => {
       const { tokenInfo, balance } = token
       const { price, name, symbol, image } = tokenInfo
       const { rate } = price || {}
 
-      const imageurl = (typeof image === 'undefined') ? 'chuckecheese.png' : `https://ethplorer.io${image}`
-      const cleanToken = {id: name, name: name, balance: balance, image: imageurl, symbol: symbol, rate: rate}
-
+      const imageurl = (typeof image === 'undefined') ? 
+        'chuckecheese.png' : `https://ethplorer.io${image}`
+      
+      const cleanToken = {
+        id: name, 
+        name: name, 
+        balance: balance, 
+        image: imageurl, 
+        symbol: symbol, 
+        rate: rate,
+      }
       tokenList.push(cleanToken)
     })
     return tokenList
