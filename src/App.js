@@ -7,6 +7,8 @@ import { Container, Avatar, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import CryptoItem from './components/CryptoItem';
 import { makeStyles } from '@material-ui/core/styles';
+import fetchData from './apis/token-api';
+import samJacksonURL from './constants';
 
 function App() {
 
@@ -32,37 +34,16 @@ function App() {
   const [address, setAddress] = useState('');
   const [tokens, setTokens] = useState([]);
 
-  async function fetchData() {
-      try {
-        const url = `https://api.ethplorer.io/getAddressInfo/${address}?apiKey=freekey`
-        const response = await fetch(url)
-        const json = await response.json()
-        const {ETH, tokens} = json
-        
-        const tokenList = []
-        tokenList.push({id: 'Ethereum', name: 'Ethereum', balance: ETH.balance, symbol: 'ETH', image: 'eth.png'})
-        tokens.forEach((token) => {
-          const { tokenInfo, balance } = token
-          const { price, name, symbol, image } = tokenInfo
-          const { rate } = price || {}
-
-          const imageurl = (typeof image === 'undefined') ? 'chuckecheese.png' : `https://ethplorer.io${image}`
-          const cleanToken = {id: name, name: name, balance: balance, image: imageurl, symbol: symbol, rate: rate}
-
-          tokenList.push(cleanToken)
-        })
-        setTokens(tokenList)
-      } catch (error) {
-        console.log(error)
-      }
-  }
-
   const handleChange = (event) => {
     setAddress(event.target.value)
   }
 
-  const handleSubmit = (event) => {
-    fetchData()
+  const handleSubmit = async (event) => {
+    if (address.length !== 0) {
+      const tokenList = await fetchData(address)
+      console.log(tokenList)
+      setTokens(tokenList)
+    }
     event.preventDefault()
   }
 
@@ -89,7 +70,7 @@ function App() {
         <Container align='center'>
             <Grid container spacing={2} justify='center'>
                 <Grid item xs={8}>
-                    <Avatar alt="Remy Sharp" className={classes.samjavatar} src='https://consequence.net/wp-content/uploads/2017/03/samuel-jackson-headshot_crop.jpg'/>
+                    <Avatar alt="Remy Sharp" className={classes.samjavatar} src={samJacksonURL}/>
                 </Grid>
                 <Grid item xs={8}>
                     <TextField id="standard" size='small' className={classes.mainInput} label="address" 
