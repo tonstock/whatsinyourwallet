@@ -7,7 +7,6 @@ import { Container, Avatar, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import CryptoItem from './components/CryptoItem';
 import { makeStyles } from '@material-ui/core/styles';
-// import {ethers} from 'ethers';
 
 function App() {
 
@@ -34,8 +33,6 @@ function App() {
   const [tokens, setTokens] = useState([]);
 
   async function fetchData() {
-    // 0xDAcc6f3f681C59547593FdF3c64edF600065F132
-    // https://api.ethplorer.io/getAddressInfo/0xDAcc6f3f681C59547593FdF3c64edF600065F132?apiKey=freekey
       try {
         const url = `https://api.ethplorer.io/getAddressInfo/${address}?apiKey=freekey`
         const response = await fetch(url)
@@ -46,12 +43,12 @@ function App() {
         tokenList.push({id: 'Ethereum', name: 'Ethereum', balance: ETH.balance, symbol: 'ETH', image: 'eth.png'})
         tokens.forEach((token) => {
           const { tokenInfo, balance } = token
-          const { name, symbol, image } = tokenInfo
+          const { price, name, symbol, image } = tokenInfo
+          const { rate } = price || {}
 
-          const imageurl = (typeof image === 'undefined') ? 'favicon.ico' : `https://ethplorer.io${image}`
-          const cleanToken = {id: name, name: name, balance: balance, image: imageurl, symbol: symbol}
+          const imageurl = (typeof image === 'undefined') ? 'chuckecheese.png' : `https://ethplorer.io${image}`
+          const cleanToken = {id: name, name: name, balance: balance, image: imageurl, symbol: symbol, rate: rate}
 
-          // const cleanedAddress = ethers.utils.getAddress(address)
           tokenList.push(cleanToken)
         })
         setTokens(tokenList)
@@ -77,6 +74,8 @@ function App() {
       <Grid xs={8} item>
         <p>Please Search a Valid Eth Address</p>
         <p>Vitalk Address: 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B</p>
+        <p>Manu Ginobli Address: 0x3d26505CAAA07F98E6f5524b155FadD5E4800A7c</p>
+        <p>Peruggia Address: 0xf4b4a58974524e183c275f3c6ea895bc2368e738</p>
       </Grid>
     )
   } else {
